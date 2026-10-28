@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wastewater Monitor</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<header>
+  <h1>Wastewater quality monitor</h1>
+  <div id="conn" class="conn off">Connecting…</div>
+</header>
+
+<div id="banner" class="banner ok" role="status">Waiting for data…</div>
+
+<main>
+  <section class="card" data-key="ph">
+    <div class="head"><h2>pH</h2><span class="badge">–</span></div>
+    <div class="value"><span class="num">–</span><span class="unit"></span></div>
+    <div class="range"></div>
+    <div class="chart"><canvas></canvas></div>
+  </section>
+  <section class="card" data-key="turbidity">
+    <div class="head"><h2>Turbidity</h2><span class="badge">–</span></div>
+    <div class="value"><span class="num">–</span><span class="unit"></span></div>
+    <div class="range"></div>
+    <div class="chart"><canvas></canvas></div>
+  </section>
+  <section class="card" data-key="temperature">
+    <div class="head"><h2>Temperature</h2><span class="badge">–</span></div>
+    <div class="value"><span class="num">–</span><span class="unit"></span></div>
+    <div class="range"></div>
+    <div class="chart"><canvas></canvas></div>
+  </section>
+</main>
+
+<section class="panel" id="simPanel" hidden>
+  <div class="head"><h2>Live demo: simulated plant inflow</h2><span class="badge simtag" id="simTag">Normal inflow</span></div>
+  <p class="hint">No hardware needed. Press a button to inject an incident and watch the alerts, pumps and notifications react.</p>
+  <div class="seg" id="scenarios">
+    <button data-scn="acid" class="scn low">Acid spill (pH low)</button>
+    <button data-scn="alkali" class="scn danger">Alkaline discharge (pH high)</button>
+    <button data-scn="mud" class="scn warning">Muddy storm inflow</button>
+    <button data-scn="heat" class="scn danger">Hot discharge</button>
+    <button data-scn="clear" class="scn">Back to normal</button>
+  </div>
+  <div class="seg" style="margin-top:10px">
+    <button id="simPause">Pause simulation</button>
+    <button id="simRandom">Random incidents: off</button>
+  </div>
+</section>
+
+<section class="panel" id="pumps">
+  <div class="head"><h2>Dosing pumps</h2>
+    <div class="seg" id="modes">
+      <button data-mode="auto">Auto</button><button data-mode="manual">Manual</button><button data-mode="off">Off</button>
+    </div>
+  </div>
+  <p class="hint" id="pumpHint"></p>
+  <div class="pumpgrid">
+    <div class="pump" data-chem="base"><span class="dot"></span><b>Base (raises pH)</b><button class="dose">Dose</button></div>
+    <div class="pump" data-chem="acid"><span class="dot"></span><b>Acid (lowers pH)</b><button class="dose">Dose</button></div>
+    <div class="pump" data-chem="coag"><span class="dot"></span><b>Coagulant (clears water)</b><button class="dose">Dose</button></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="head"><h2>Reports</h2>
+    <div class="seg">
+      <button id="repBtn">Show 24 h summary</button>
+      <a class="btn" href="/api/history.csv?hours=24" download>Download CSV</a>
+    </div>
+  </div>
+  <div id="report" class="hint">Readings are saved to data/readings.csv; alerts and pump actions to data/events.csv.</div>
+</section>
+
+<section class="log">
+  <h2>Notifications sent</h2>
+  <ul id="notes"><li class="empty">None yet. Trigger a danger reading to send one.</li></ul>
+</section>
+
+<section class="log">
+  <h2>Alert log</h2>
+  <ul id="log"><li class="empty">No alerts yet.</li></ul>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>
